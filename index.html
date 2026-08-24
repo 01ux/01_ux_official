@@ -1,0 +1,514 @@
+<!doctype html>
+<html lang="ja">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#090909">
+<meta name="description" content="景算 / KEISAN — Official Links & Releases">
+<title>景算 / KEISAN</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Noto+Serif+JP:wght@400;500;600&display=swap');
+
+:root {
+  --bg:#090909;
+  --surface:rgba(255,255,255,.045);
+  --surface-hover:rgba(255,255,255,.07);
+  --text:#f2f1ee;
+  --muted:rgba(242,241,238,.48);
+  --line:rgba(255,255,255,.13);
+  --orange:#d66b40;
+  --orange-soft:rgba(214,107,64,.18);
+}
+
+* { box-sizing:border-box; }
+
+html { scroll-behavior:smooth; }
+
+body {
+  margin:0;
+  min-height:100vh;
+  background:var(--bg);
+  color:var(--text);
+  font-family:Inter,"Noto Sans JP",sans-serif;
+  overflow-x:hidden;
+}
+
+body::before {
+  content:"";
+  position:fixed;
+  inset:-25%;
+  z-index:-5;
+  background:
+    radial-gradient(circle at 78% 12%,rgba(214,107,64,.12),transparent 22%),
+    radial-gradient(circle at 12% 78%,rgba(255,255,255,.045),transparent 25%),
+    linear-gradient(135deg,#050505,#111 48%,#090909 75%,#050505);
+  filter:blur(38px);
+}
+
+body::after {
+  content:"";
+  position:fixed;
+  inset:0;
+  z-index:30;
+  pointer-events:none;
+  opacity:.065;
+  background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 180 180' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.85' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+  mix-blend-mode:screen;
+}
+
+.page {
+  min-height:100vh;
+  position:relative;
+  isolation:isolate;
+}
+
+.grid {
+  position:fixed;
+  inset:0;
+  z-index:-3;
+  opacity:.035;
+  pointer-events:none;
+  background-image:
+    linear-gradient(rgba(255,255,255,.4) 1px,transparent 1px),
+    linear-gradient(90deg,rgba(255,255,255,.4) 1px,transparent 1px);
+  background-size:80px 80px;
+  mask-image:linear-gradient(to bottom,black,transparent 78%);
+}
+
+.orbit {
+  position:fixed;
+  z-index:-2;
+  width:min(720px,65vw);
+  aspect-ratio:1;
+  right:-30vw;
+  top:-20vw;
+  border:1px solid rgba(214,107,64,.17);
+  border-radius:50%;
+  transform:rotate(-18deg);
+}
+
+.orbit::before,
+.orbit::after {
+  content:"";
+  position:absolute;
+  border:1px solid rgba(255,255,255,.06);
+  border-radius:50%;
+}
+
+.orbit::before { inset:10%; }
+.orbit::after { inset:23%; }
+
+.container {
+  width:min(900px,calc(100% - 40px));
+  margin:auto;
+}
+
+main {
+  padding:clamp(80px,13vh,150px) 0 65px;
+}
+
+.identity {
+  text-align:center;
+  margin-bottom:58px;
+  animation:rise .8s ease both;
+}
+
+.eyebrow {
+  margin-bottom:20px;
+  color:var(--muted);
+  font-size:9px;
+  letter-spacing:.52em;
+  text-transform:uppercase;
+}
+
+h1 {
+  margin:0;
+  font-family:"Noto Serif JP",serif;
+  font-weight:400;
+  font-size:clamp(70px,12vw,128px);
+  line-height:.9;
+  letter-spacing:.13em;
+  text-indent:.13em;
+}
+
+.roman {
+  margin-top:17px;
+  color:rgba(255,255,255,.4);
+  font-size:9px;
+  letter-spacing:.7em;
+  text-indent:.7em;
+}
+
+.section-title {
+  display:flex;
+  align-items:center;
+  gap:16px;
+  margin:0 0 17px;
+  color:rgba(255,255,255,.44);
+  font-size:9px;
+  font-weight:500;
+  letter-spacing:.38em;
+  text-transform:uppercase;
+}
+
+.section-title::after {
+  content:"";
+  height:1px;
+  flex:1;
+  background:linear-gradient(90deg,var(--line),transparent);
+}
+
+.links {
+  display:grid;
+  gap:12px;
+  max-width:760px;
+  margin:0 auto;
+}
+
+.link {
+  position:relative;
+  display:grid;
+  grid-template-columns:68px 1fr auto;
+  align-items:center;
+  min-height:88px;
+  padding:0 27px;
+  color:inherit;
+  text-decoration:none;
+  border:1px solid var(--line);
+  border-radius:17px;
+  background:var(--surface);
+  backdrop-filter:blur(18px);
+  -webkit-backdrop-filter:blur(18px);
+  overflow:hidden;
+  transition:.3s ease;
+  animation:rise .8s ease both;
+}
+
+.link:nth-child(1){animation-delay:.08s}
+.link:nth-child(2){animation-delay:.14s}
+.link:nth-child(3){animation-delay:.2s}
+
+.link::before {
+  content:"";
+  position:absolute;
+  inset:0;
+  background:linear-gradient(105deg,transparent 25%,rgba(255,255,255,.04) 50%,rgba(214,107,64,.07) 54%,transparent 78%);
+  transform:translateX(-110%);
+  transition:.75s ease;
+}
+
+.link:hover {
+  transform:translateY(-3px);
+  background:var(--surface-hover);
+  border-color:rgba(214,107,64,.38);
+  box-shadow:0 20px 55px rgba(0,0,0,.3);
+}
+
+.link:hover::before { transform:translateX(110%); }
+
+.icon {
+  position:relative;
+  z-index:1;
+  font-size:29px;
+}
+
+.icon.youtube { font-size:22px; }
+.icon.tiktok { font-size:27px; }
+
+.info { position:relative;z-index:1; }
+
+.name {
+  font-size:14px;
+  font-weight:600;
+  letter-spacing:.04em;
+}
+
+.handle {
+  margin-top:6px;
+  color:var(--muted);
+  font-size:9px;
+  letter-spacing:.1em;
+}
+
+.arrow {
+  position:relative;
+  z-index:1;
+  color:rgba(255,255,255,.45);
+  font-size:23px;
+  transition:.3s ease;
+}
+
+.link:hover .arrow {
+  color:var(--orange);
+  transform:translate(4px,-2px);
+}
+
+.releases {
+  margin-top:74px;
+}
+
+.release-grid {
+  display:grid;
+  grid-template-columns:repeat(2,minmax(0,1fr));
+  gap:17px;
+}
+
+.release-card {
+  position:relative;
+  display:block;
+  color:inherit;
+  text-decoration:none;
+  border:1px solid var(--line);
+  border-radius:18px;
+  background:var(--surface);
+  overflow:hidden;
+  backdrop-filter:blur(18px);
+  -webkit-backdrop-filter:blur(18px);
+  transition:.35s ease;
+  animation:rise .8s .25s ease both;
+}
+
+.release-card:nth-child(2){animation-delay:.32s}
+
+.release-card:hover {
+  transform:translateY(-5px);
+  border-color:rgba(214,107,64,.42);
+  box-shadow:0 24px 65px rgba(0,0,0,.38),0 0 40px rgba(214,107,64,.05);
+}
+
+/* ▼▼▼ ここからスクショ画像反映（装飾削除済み） ▼▼▼ */
+
+.artwork {
+  position:relative;
+  aspect-ratio:1;
+  overflow:hidden;
+  background:
+    linear-gradient(135deg, rgba(0,0,0,.35), rgba(0,0,0,.1)),
+    url('images/1st.png');
+  background-size:cover;
+  background-position:center;
+}
+
+.release-card:nth-child(2) .artwork {
+  background:
+    linear-gradient(135deg, rgba(0,0,0,.35), rgba(0,0,0,.1)),
+    url('images/2nd.png');
+  background-size:cover;
+  background-position:center;
+}
+
+/* ▲▲▲ スクショ画像反映ここまで ▲▲▲ */
+
+/* ▼ 削除した装飾のCSSはすべて除去済み ▼ */
+
+.release-info {
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  padding:19px 21px 20px;
+}
+
+.release-info h3 {
+  margin:0;
+  font-family:"Noto Serif JP",serif;
+  font-size:15px;
+  font-weight:400;
+  letter-spacing:.08em;
+}
+
+.release-info p {
+  margin:6px 0 0;
+  color:var(--muted);
+  font-size:9px;
+  letter-spacing:.12em;
+}
+
+.release-arrow {
+  color:rgba(255,255,255,.4);
+  font-size:20px;
+  transition:.3s ease;
+}
+
+.release-card:hover .release-arrow {
+  color:var(--orange);
+  transform:translate(3px,-3px);
+}
+
+.view-label {
+  position:absolute;
+  right:20px;
+  bottom:76px;
+  padding:7px 9px;
+  color:#fff;
+  background:rgba(214,107,64,.9);
+  font-size:7px;
+  letter-spacing:.18em;
+  opacity:0;
+  transform:translateY(5px);
+  transition:.3s ease;
+}
+
+.release-card:hover .view-label {
+  opacity:1;
+  transform:none;
+}
+
+.wave {
+  display:flex;
+  justify-content:center;
+  align-items:center;
+  gap:3px;
+  height:62px;
+  margin:88px auto 0;
+  max-width:700px;
+  opacity:.35;
+  mask-image:linear-gradient(90deg,transparent,black 14%,black 86%,transparent);
+}
+
+.wave i {
+  width:2px;
+  height:calc(5px + var(--h)*1px);
+  border-radius:99px;
+  background:linear-gradient(to top,rgba(255,255,255,.25),var(--orange));
+}
+
+footer {
+  margin-top:18px;
+  text-align:center;
+  color:rgba(255,255,255,.23);
+  font-size:7px;
+  letter-spacing:.28em;
+}
+
+@keyframes rise {
+  from{opacity:0;transform:translateY(18px)}
+  to{opacity:1;transform:none}
+}
+
+@media(max-width:600px) {
+  .container{width:min(100% - 28px,520px)}
+  main{padding-top:72px;padding-bottom:40px}
+  .identity{margin-bottom:47px}
+  .eyebrow{font-size:8px;letter-spacing:.4em}
+  h1{font-size:72px;letter-spacing:.1em;text-indent:.1em}
+  .roman{font-size:8px;letter-spacing:.55em;text-indent:.55em}
+  .link{grid-template-columns:52px 1fr auto;min-height:78px;padding:0 19px;border-radius:15px}
+  .icon{font-size:25px} .icon.youtube{font-size:20px} .icon.tiktok{font-size:23px}
+  .name{font-size:13px} .handle{font-size:9px}
+  .releases{margin-top:60px}
+  .release-grid{gap:11px}
+  .release-info{padding:14px 14px 16px}
+  .release-info h3{font-size:12px;letter-spacing:.05em}
+  .release-info p{font-size:8px;margin-top:5px}
+  .release-arrow{font-size:17px}
+  .view-label{display:none}
+  .wave{margin-top:65px;height:50px}
+  .orbit{width:95vw;right:-55vw;top:-27vw}
+}
+
+@media(prefers-reduced-motion:reduce) {
+  *,*::before,*::after{animation:none!important;transition:none!important}
+}
+</style>
+</head>
+
+<body>
+<div class="page">
+  <div class="grid"></div>
+  <div class="orbit"></div>
+
+  <main class="container">
+
+    <section class="identity">
+      <div class="eyebrow">Official Links</div>
+      <h1>景算</h1>
+      <div class="roman">K E I S A N</div>
+    </section>
+
+    <section aria-label="Social Links">
+      <div class="section-title">Social</div>
+
+      <nav class="links">
+        <a class="link" href="https://x.com/01_ux_" target="_blank" rel="noopener noreferrer">
+          <div class="icon">𝕏</div>
+          <div class="info">
+            <div class="name">X</div>
+            <div class="handle">@01_ux_</div>
+          </div>
+          <div class="arrow">→</div>
+        </a>
+
+        <a class="link" href="https://youtube.com/@01_ux_" target="_blank" rel="noopener noreferrer">
+          <div class="icon youtube">▶</div>
+          <div class="info">
+            <div class="name">YouTube</div>
+            <div class="handle">@01_ux_</div>
+          </div>
+          <div class="arrow">→</div>
+        </a>
+
+        <a class="link" href="https://www.tiktok.com/@01_ux_" target="_blank" rel="noopener noreferrer">
+          <div class="icon tiktok">♪</div>
+          <div class="info">
+            <div class="name">TikTok</div>
+            <div class="handle">@01_ux_</div>
+          </div>
+          <div class="arrow">→</div>
+        </a>
+      </nav>
+    </section>
+
+    <section class="releases" aria-label="Releases">
+      <div class="section-title">Releases</div>
+
+      <div class="release-grid">
+        
+        <a class="release-card" href="https://linkcloud.mu/fd5726ab" target="_blank" rel="noopener noreferrer">
+          <div class="artwork"></div>
+          <div class="release-info">
+            <div>
+              <h3>夢路スケッチ</h3>
+              <p>2023.08.14</p>
+            </div>
+            <span class="release-arrow">↗</span>
+          </div>
+          <div class="view-label">VIEW RELEASE</div>
+        </a>
+        
+        <a class="release-card" href="https://linkcloud.mu/a4bebf44" target="_blank" rel="noopener noreferrer">
+          <div class="artwork"></div>
+          <div class="release-info">
+            <div>
+              <h3>夕景ポリフォニック</h3>
+              <p>2024.11.01</p>
+            </div>
+            <span class="release-arrow">↗</span>
+          </div>
+          <div class="view-label">VIEW RELEASE</div>
+        </a>
+
+      </div>
+    </section>
+
+    <div class="wave" aria-hidden="true">
+      <i style="--h:7"></i><i style="--h:15"></i><i style="--h:26"></i>
+      <i style="--h:10"></i><i style="--h:35"></i><i style="--h:17"></i>
+      <i style="--h:45"></i><i style="--h:25"></i><i style="--h:13"></i>
+      <i style="--h:38"></i><i style="--h:22"></i><i style="--h:52"></i>
+      <i style="--h:32"></i><i style="--h:18"></i><i style="--h:44"></i>
+      <i style="--h:29"></i><i style="--h:13
+      <i style="--h:29"></i><i style="--h:13"></i><i style="--h:39"></i>
+      <i style="--h:23"></i><i style="--h:47"></i><i style="--h:31"></i>
+      <i style="--h:15"></i><i style="--h:42"></i><i style="--h:27"></i>
+      <i style="--h:11"></i><i style="--h:36"></i><i style="--h:20"></i>
+      <i style="--h:48"></i><i style="--h:25"></i><i style="--h:14"></i>
+      <i style="--h:40"></i><i style="--h:22"></i><i style="--h:34"></i>
+      <i style="--h:18"></i><i style="--h:45"></i>
+    </div>
+
+    <footer>© KEISAN ALL RIGHTS RESERVED.</footer>
+
+  </main>
+</div>
+</body>
+</html>
